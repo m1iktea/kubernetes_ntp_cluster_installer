@@ -9,3 +9,7 @@ kubernetes cluster install ntp in each nodes
 ```bash
   ./install_ntp_cluster.sh
 ```
+
+## Support system
+1. Ubuntu 18.04 and later versions
+2. Centos 7.x and later versions
