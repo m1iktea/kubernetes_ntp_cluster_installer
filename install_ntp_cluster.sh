@@ -9,7 +9,7 @@ get_master_node(){
     for i in $(ls ntp_check/*.template);do
         script=$(echo ${i} | sed 's/.template//g')
         echo "change master ip for check scripts ${script}"
-        sed "s/NTP_MASTER_IP/${master_node_ip}/g" ${i} > ntp_check/${script}
+        sed "s/NTP_MASTER_IP/${master_node_ip}/g" ${i} > ${script}
     done
 }
 
