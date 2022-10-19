@@ -48,7 +48,7 @@ init_check_scripts(){
 
 crontab_check(){
     # restart all ntp service in 00:00 every day
-    (crontab -l ; echo "0 0 */1 * * /opt/ntp_check/restartallsync.sh >> /opt/ntp_check/sync.log 2>&1") | crontab -
+    (crontab -l | grep -v ntp_check; echo "0 0 */1 * * /opt/ntp_check/restartallsync.sh >> /opt/ntp_check/sync.log 2>&1") | crontab -
 }
 
 main(){
