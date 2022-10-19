@@ -36,7 +36,7 @@ install_ntp_each_node(){
         ssh ${node} 'bash -c /tmp/install_ntp_node.sh'
         ssh ${node} 'ntpq -p'
         ssh ${node} 'mkdir -p /opt/ntp_check'
-        scp ntp_check/resynctime.sh.sh ${node}:/opt/ntp_check/resynctime.sh.sh
+        scp ntp_check/resynctime.sh ${node}:/opt/ntp_check/resynctime.sh
     done
 }
 
