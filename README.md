@@ -8,6 +8,7 @@ kubernetes cluster install ntp in each nodes
 ## Principle
 1. choose one kubernetes master node as ntp server master node
 2. all other nodes sync time from ntp server master node
+3. scripts for auto or manual check
 
 ## Running
 ```bash
