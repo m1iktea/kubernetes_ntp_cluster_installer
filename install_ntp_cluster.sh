@@ -24,6 +24,7 @@ install_ntp_each_node(){
     echo 'master node installing...'
     scp install_ntp_node.sh ${master_node_ip}:/tmp/install_ntp_node.sh
     ssh ${master_node_ip} 'bash -c /tmp/install_ntp_node.sh'
+    scp -r ntp_check/ ${master_node_ip}:/opt/
 
     #client
     echo 'client nodes installing...'
@@ -34,13 +35,13 @@ install_ntp_each_node(){
         scp ntp_client.conf ${node}:/etc/ntp.conf
         ssh ${node} 'bash -c /tmp/install_ntp_node.sh'
         ssh ${node} 'ntpq -p'
+        ssh ${node} 'mkdir -p /opt/ntp_check'
+        scp ntp_check/resynctime.sh.sh ${node}:/opt/ntp_check/resynctime.sh.sh
     done
 }
 
-copy_check_scripts(){
-    mkdir -p /opt/ntp_check
-    cp -r ntp_check /opt/
-    chmod +x /opt/ntp_check/*.sh
+init_check_scripts(){
+    chmod +x ntp_check/*.sh
     cp clusterhosts /opt/ntp_check/clusterhosts
 }
 
@@ -52,8 +53,8 @@ crontab_check(){
 main(){
     get_master_node
     get_all_nodes
+    init_check_scripts
     install_ntp_each_node
-    copy_check_scripts
     crontab_check
 }
 
