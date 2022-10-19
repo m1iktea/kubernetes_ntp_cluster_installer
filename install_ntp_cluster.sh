@@ -6,9 +6,10 @@ get_master_node(){
     master_node=$(kubectl get node | grep master | sed -n '1p' | awk '{print $1}')
     master_node_ip=$(kubectl get node ${master_node} -o wide | awk '{print $6}' | sed '1d')
     sed "s/NTP_MASTER_IP/${master_node_ip}/g" ntp_client.conf.template > ntp_client.conf
-    for i in $(ls ntp_check/*.sh);do
-        echo "change master ip for check scripts $i"
-        sed -i "s/NTP_MASTER_IP/${master_node_ip}/g" $i
+    for i in $(ls ntp_check/*.template);do
+        script=$(echo ${i} | sed 's/.template//g')
+        echo "change master ip for check scripts ${script}"
+        sed "s/NTP_MASTER_IP/${master_node_ip}/g" ${i} > ntp_check/${script}
     done
 }
 
