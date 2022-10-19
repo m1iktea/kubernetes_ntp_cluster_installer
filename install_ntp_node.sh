@@ -20,14 +20,22 @@ install_ntp_ubuntu(){
     systemctl restart ntp
 }
 
+copy_check_scripts(){
+    mkdir -p /opt/ntp_check
+    cp ntp_check/resynctime.sh /opt/ntp_check/resynctime.sh
+    chmod +x /opt/ntp_check/resynctime.sh
+}
+
 if [ -e /etc/redhat-release ];then 
     sys_ver='centos'
     echo "system version is ${sys_ver}, installing ntp..."
     install_ntp_centos
+    copy_check_scripts
 elif [ -e /etc/lsb-release ];then
     sys_ver='ubuntu'
     echo "system version is ${sys_ver}, installing ntp..."
     install_ntp_ubuntu
+    copy_check_scripts
 else
     echo 'Unsupported system version, exit!'
     exit 1

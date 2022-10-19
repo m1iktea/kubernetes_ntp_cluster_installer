@@ -6,6 +6,10 @@ get_master_node(){
     master_node=$(kubectl get node | grep master | sed -n '1p' | awk '{print $1}')
     master_node_ip=$(kubectl get node ${master_node} -o wide | awk '{print $6}' | sed '1d')
     sed "s/NTP_MASTER_IP/${master_node_ip}/g" ntp_client.conf.template > ntp_client.conf
+    for i in $(ls ntp_check/*.sh);do
+        echo "change master ip for check scripts $i"
+        sed -i "s/NTP_MASTER_IP/${master_node_ip}/g" $i
+    done
 }
 
 #get all nodes
@@ -33,10 +37,24 @@ install_ntp_each_node(){
     done
 }
 
+copy_check_scripts(){
+    mkdir -p /opt/ntp_check
+    cp -r ntp_check /opt/
+    chmod +x /opt/ntp_check/*.sh
+    cp clusterhosts /opt/ntp_check/clusterhosts
+}
+
+crontab_check(){
+    # restart all ntp service in 00:00 every day
+    (crontab -l ; echo "0 0 */1 * * /opt/ntp_check/restartallsync.sh >> /opt/ntp_check/sync.log 2>&1") | crontab -
+}
+
 main(){
     get_master_node
     get_all_nodes
     install_ntp_each_node
+    copy_check_scripts
+    crontab_check
 }
 
 main 2>&1 | tee -a ${log_file}
