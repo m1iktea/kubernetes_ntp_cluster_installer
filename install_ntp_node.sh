@@ -14,10 +14,12 @@ install_ntp_ubuntu(){
     if [ ! -e /usr/bin/ntpq ];then 
         apt install -y ntp
         systemctl enable ntp
+        systemctl disable systemd-timesyncd
     else
         echo 'ntp already installed, restarting ntp...'
     fi
     systemctl restart ntp
+    systemctl stop systemd-timesyncd
 }
 
 if [ -e /etc/redhat-release ];then 
