@@ -42,7 +42,7 @@ install_ntp_each_node(){
 
 init_check_scripts(){
     chmod +x ntp_check/*.sh
-    cp clusterhosts /opt/ntp_check/clusterhosts
+    cp clusterhosts ntp_check/clusterhosts
 }
 
 crontab_check(){
