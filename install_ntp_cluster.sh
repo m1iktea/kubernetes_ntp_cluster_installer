@@ -26,6 +26,8 @@ install_ntp_each_node(){
     scp install_ntp_node.sh ${master_node_ip}:/tmp/install_ntp_node.sh
     ssh ${master_node_ip} 'bash -c /tmp/install_ntp_node.sh'
     scp -r ntp_check/ ${master_node_ip}:/opt/
+    scp ntp_master.conf.template ${master_node_ip}:/etc/ntp.conf
+    ssh ${master_node_ip} 'bash -c /tmp/install_ntp_node.sh'
 
     #client
     echo 'client nodes installing...'
@@ -42,8 +44,10 @@ install_ntp_each_node(){
 }
 
 init_check_scripts(){
+    cp uninstall_ntp_cluster.sh ntp_check/uninstall_ntp_cluster.sh
     chmod +x ntp_check/*.sh
     cp clusterhosts ntp_check/clusterhosts
+    cp -r ntp_check /opt/ntp_check
 }
 
 crontab_check(){
